@@ -1,167 +1,200 @@
-# Arduino Security Alarm System 🔐
+# Arduino Embedded Security System
 
-Un système de **sécurité et d’alarme basé sur Arduino** permettant de détecter les intrusions à l’aide d’un capteur de mouvement PIR et de déclencher une alarme sonore.
-Le système utilise également un **clavier numérique pour saisir un mot de passe** et un **écran LCD pour afficher les informations du système**.
+Embedded security and alarm prototype developed with **Arduino Uno**, combining motion detection, password-based control, user interaction and real-time alarm management.
 
-Ce projet peut être utilisé pour sécuriser :
+## Project Overview
 
-* une maison
-* un bureau
-* un laboratoire
-* tout espace nécessitant une surveillance
+This project demonstrates the design and implementation of a small embedded security system using sensors, actuators and a microcontroller.
 
-Le système repose sur une **carte Arduino Uno comme contrôleur principal**. 
+The system can be armed by the user, monitor movement through a **PIR sensor**, trigger an audible alarm when motion is detected and require a password to deactivate the alarm.
 
----
+A **4x4 keypad** provides user input while a **16x2 LCD** displays system status and instructions.
 
-# 📷 Aperçu du système
+> This project is an educational embedded-systems prototype and is not intended to replace a certified commercial security system.
 
-Le système comprend les composants suivants :
+## Main Features
 
-* Arduino Uno
-* Capteur de mouvement PIR
-* Écran LCD 16x2
-* Clavier numérique 4x4
-* Buzzer
-* Breadboard et câbles
+- Alarm activation from the keypad
+- Motion detection using a PIR sensor
+- Audible alert using a buzzer
+- Password-protected alarm deactivation
+- Password modification through the keypad
+- LCD-based user interface
+- Visual activation countdown
+- Embedded real-time control using Arduino
 
-Lorsque le capteur PIR détecte un mouvement, le buzzer déclenche une **alarme sonore** et l’utilisateur doit entrer le **mot de passe correct** pour désactiver le système.
+## Hardware
 
----
+| Component | Purpose |
+|---|---|
+| Arduino Uno | Main embedded controller |
+| PIR sensor | Motion detection |
+| 16x2 LCD | User interface and system messages |
+| 4x4 keypad | Password and command input |
+| Buzzer | Audible alarm |
+| Breadboard | Electronic prototyping |
+| Jumper wires | Electrical connections |
 
-# ⚙️ Fonctionnalités
+## System Architecture
 
-✔ Activation de l’alarme avec le clavier
-✔ Détection de mouvement avec capteur PIR
-✔ Déclenchement d’une alarme sonore
-✔ Désactivation avec mot de passe
-✔ Possibilité de **changer le mot de passe**
-✔ Affichage des informations sur écran LCD
+```text
+              +----------------+
+              |   PIR Sensor   |
+              +-------+--------+
+                      |
+                      v
++----------+    +-------------+    +-----------+
+| Keypad   | -> | Arduino Uno | -> |  Buzzer   |
+|  4x4     |    |             |    |   Alarm   |
++----------+    +------+------+    +-----------+
+                      |
+                      v
+                +-----------+
+                | LCD 16x2  |
+                +-----------+
+```
 
----
+The Arduino acts as the central controller and coordinates sensor acquisition, alarm logic, password management and the user interface.
 
-# 🔧 Matériel utilisé
+## Operating Logic
 
-| Composant   | Description               |
-| ----------- | ------------------------- |
-| Arduino Uno | Microcontrôleur principal |
-| PIR Sensor  | Détection de mouvement    |
-| LCD 16x2    | Affichage des messages    |
-| Keypad 4x4  | Entrée du mot de passe    |
-| Buzzer      | Alarme sonore             |
-| Breadboard  | Montage du circuit        |
+### 1. Idle State
 
----
+The LCD provides access to the main actions:
 
-# 🧠 Principe de fonctionnement
+- Activate the alarm
+- Change the password
 
-1️⃣ L’utilisateur active l’alarme via le clavier.
-2️⃣ Un **compte à rebours de 3 secondes** démarre.
-3️⃣ Le capteur PIR surveille les mouvements.
-4️⃣ Si un mouvement est détecté :
+### 2. Alarm Activation
 
-* le buzzer se déclenche
-* le LCD affiche un message d’alerte
+When activation is requested, the system displays a countdown before entering monitoring mode.
 
-5️⃣ L’utilisateur doit entrer le **mot de passe correct** pour arrêter l’alarme.
+### 3. Motion Monitoring
 
----
+Once armed, the Arduino continuously reads the PIR sensor.
 
-# 🖥️ Installation
+If movement is detected:
 
-1️⃣ Installer **Arduino IDE**
+- The buzzer is activated
+- The LCD displays an alarm message
+- The system requests the password
 
-https://www.arduino.cc/en/software
+### 4. Authentication
 
-2️⃣ Installer les bibliothèques nécessaires :
+The user enters the password using the keypad.
 
-* `LiquidCrystal`
-* `Keypad`
+If the password is correct, the alarm is disabled and the system returns to its normal state.
 
-3️⃣ Connecter l’Arduino à l’ordinateur.
+### 5. Password Management
 
-4️⃣ Téléverser le code dans la carte Arduino.
+The software also provides a password-change mode.
 
----
+The current password must first be validated before a new password can be entered.
 
-# 🔌 Connexion des composants
+## Pin Configuration
 
 ### PIR Sensor
 
 | PIR | Arduino |
-| --- | ------- |
-| VCC | 5V      |
-| GND | GND     |
-| OUT | Pin 10  |
+|---|---|
+| VCC | 5V |
+| GND | GND |
+| OUT | Pin 10 |
 
 ### Buzzer
 
 | Buzzer | Arduino |
-| ------ | ------- |
-| +      | Pin 11  |
-| -      | GND     |
+|---|---|
+| + | Pin 11 |
+| - | GND |
 
-### LCD
+### LCD 16x2
 
 | LCD | Arduino |
-| --- | ------- |
-| RS  | A0      |
-| E   | A1      |
-| D4  | A2      |
-| D5  | A3      |
-| D6  | A4      |
-| D7  | A5      |
+|---|---|
+| RS | A0 |
+| E | A1 |
+| D4 | A2 |
+| D5 | A3 |
+| D6 | A4 |
+| D7 | A5 |
 
-### Keypad
+### Keypad 4x4
 
-| Keypad | Arduino |
-| ------ | ------- |
-| Rows   | 9,8,7,6 |
-| Cols   | 5,4,3,2 |
+| Interface | Arduino Pins |
+|---|---|
+| Rows | 9, 8, 7, 6 |
+| Columns | 5, 4, 3, 2 |
 
----
+## Software
 
-# 💻 Code
+The embedded application is implemented in **Arduino C/C++**.
 
-Le programme est écrit en **C++ pour Arduino** et utilise les bibliothèques :
+Main libraries:
 
-```
+```text
 LiquidCrystal
 Keypad
 ```
 
-Le code principal gère :
+The program handles:
 
-* la détection PIR
-* la gestion du mot de passe
-* l’activation de l’alarme
-* l’affichage sur LCD
+- Digital sensor acquisition
+- Alarm state management
+- Keypad input
+- Password verification
+- Password modification
+- LCD interface management
+- Buzzer control
 
----
+## Repository Structure
 
-# 🚀 Améliorations possibles
+```text
+arduino-embedded-security-system/
+├── pfe.ino
+├── README.md
+├── License
+└── mimoire de fin d'etudes - Réalisation d'un système de sécurité et d'alarme.pdf
+```
 
-* envoyer une notification SMS
-* connecter le système à Internet (IoT)
-* ajouter une caméra
-* ajouter une application mobile
-* ajouter un module GSM
+## Running the Project
 
----
+1. Install the Arduino IDE.
+2. Connect the Arduino Uno to the computer.
+3. Install or verify the required `Keypad` and `LiquidCrystal` libraries.
+4. Open `pfe.ino`.
+5. Connect the components according to the pin configuration.
+6. Compile and upload the program to the Arduino Uno.
 
-# 🎓 Objectif du projet
+## Engineering Skills Demonstrated
 
-Ce projet a été développé pour apprendre :
+This project demonstrates practical experience with:
 
-* les **systèmes embarqués**
-* la **programmation Arduino**
-* la **sécurité électronique**
-* l’intégration de capteurs et actionneurs
+- Embedded systems
+- Arduino programming
+- C/C++
+- Sensor integration
+- Actuator control
+- Human-machine interfaces
+- State-based control logic
+- Digital electronics
+- Hardware/software integration
 
----
+## Possible Improvements
 
-# 👨‍💻 Auteur
+Potential extensions include:
 
-Nom : AHMED EL YAMINI
-Projet : Arduino Security Alarm System
-Année : 2026
+- ESP32-based Wi-Fi connectivity
+- MQTT communication
+- Mobile or web monitoring
+- GSM/SMS notifications
+- Event logging
+- Camera integration
+- Multiple sensor zones
+- Persistent configuration storage
+- Improved authentication mechanisms
+
+## Author
+
+**Ahmed EL YAMINI**  
+Aeronautical Engineering & Space Technologies
